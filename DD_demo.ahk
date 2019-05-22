@@ -1,10 +1,17 @@
 ﻿#Include, class_DD.ahk
 SetWorkingDir %A_ScriptDir%
 
-DD.str("abc")
-DD._key_press("F11")
+dd._key_press("LWin", "R")
 
-; DD._whl("Up")
-; DD._btn("RButtonDown")
-; DD._btn("RButtonUp")
-; DD.movR(10, 10)
+WinWait, ahk_class #32770 ahk_exe explorer.exe,, 1
+
+dd.str("notepad")
+dd._key_press("Enter")
+
+WinWait, ahk_exe notepad.exe
+WinActivate
+
+dd.str("Hello World")
+dd._key_press("Enter")
+dd.str("Demo End.")
+dd._key_press("Shift", "Home")

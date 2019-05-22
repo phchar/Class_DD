@@ -1,3 +1,4 @@
+﻿; v1.33 (2019-5-22) - Updated RunAsAdmin and DD_demo.ahk
 ; v1.32 (2017-3-12) - Added nCount prameter to _btn_press()
 ; v1.31 (2017-3-11) - Added _key_pressEx(); Added x, y paramaters to _btn() and _btn_press()
 ; v1.30 (2017-3-11) - Added _btn_press()
@@ -75,11 +76,25 @@ class DD_Helper
 	static _ := DD_Helper.InitClass()
 
 	InitClass() {
-		if !A_IsAdmin {
-			Run *RunAs "%A_ScriptFullPath%"  ; Requires v1.0.92.01+
+		this.RunAsAdmin()
+		this.LoadDll()
+	}
+
+	; https://www.autohotkey.com/docs/commands/Run.htm#RunAs
+	RunAsAdmin() {
+		full_command_line := DllCall("GetCommandLine", "str")
+
+		if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
+		{
+			try
+			{
+				if A_IsCompiled
+					Run *RunAs "%A_ScriptFullPath%" /restart
+				else
+					Run *RunAs "%A_AhkPath%" /restart "%A_ScriptFullPath%"
+			}
 			ExitApp
 		}
-		this.LoadDll()
 	}
 
 	LoadDll() {
@@ -141,7 +156,7 @@ class DD_Helper
 	; Example: _key("F11", "Down")
 	;          _key("F11", "Up")
 	_key(sKey, sflag) {
-		ddCode := this.todc( GetKeyVK(sKey) )
+		ddCode := this._key_to_dc(sKey)
 		this.key(ddCode, (sflag="Up") ? 2 : 1 )
 	}
 
@@ -151,7 +166,7 @@ class DD_Helper
 		arr_ddCode := []
 
 		for i, k in sKey {
-			arr_ddCode[i] := this.todc( GetKeyVK(k) )
+			arr_ddCode[i] := this._key_to_dc(k)
 			this.key(arr_ddCode[i], 1) ; Down
 		}
 		for i, ddCode in arr_ddCode {
@@ -160,7 +175,7 @@ class DD_Helper
 	}
 
 	_key_pressEx(sKey, nCount := 1) {
-		ddCode := this.todc( GetKeyVK(sKey) )
+		ddCode := this._key_to_dc(sKey)
 
 		Loop, % nCount {
 			this.key(ddCode, 1) ; Down
@@ -172,5 +187,14 @@ class DD_Helper
 	;          _whl("up")
 	_whl(sParam) {
 		this.whl( (sParam="Up") ? 1 : 2 )
+	}
+
+	_key_to_dc(key) {
+		static o := {"Win": "Lwin"}
+
+		if o.HasKey(key)
+			key := o[key]
+
+		return this.todc( GetKeyVK(key) )
 	}
 }
