@@ -1,4 +1,5 @@
-﻿; v1.33 (2019-5-22) - Updated RunAsAdmin and DD_demo.ahk
+﻿; v1.34 (2019-8-13) - Updated dll to DD94687; Removed DD folder.
+; v1.33 (2019-5-22) - Updated RunAsAdmin and DD_demo.ahk
 ; v1.32 (2017-3-12) - Added nCount prameter to _btn_press()
 ; v1.31 (2017-3-11) - Added _key_pressEx(); Added x, y paramaters to _btn() and _btn_press()
 ; v1.30 (2017-3-11) - Added _btn_press()
