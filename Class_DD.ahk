@@ -98,11 +98,7 @@ class DD_Helper
 	}
 
 	LoadDll() {
-		if A_Is64bitOS {
-			dllFile := (A_PtrSize=8) ? "DD\64\ddx64.64.dll" : "DD\64\ddx64.32.dll"
-		} else {
-			dllFile := "DD\32\ddx32.dll"
-		}
+		dllFile := (A_PtrSize=8) ? "DD64.dll" : "DD32.dll"
 
 		if !this.hModule := DllCall("LoadLibrary", "Str", dllFile, "Ptr") {
 			if !FileExist(dllFile) {
